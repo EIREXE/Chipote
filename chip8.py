@@ -78,8 +78,6 @@ class Chip8:
                 self.sound_timer = 0
     def emulate_cycle(self):
         opcode = self.memory[self.pc] << 8 | self.memory[self.pc+1]
-        if opcode != 0x1222:
-            print(hex(opcode))
         opcode_test = opcode & 0xF000
         if opcode_test == 0x0000:
 
@@ -190,9 +188,9 @@ class Chip8:
 
     #0x00E0
     def clear_screen(self):
-        self.pc += 2;
         self.screen = [False]*(64*32);
         self.draw_flag = True
+        self.pc += 2;
     #0x00FD
     def exit_interpreter(self):
         sys.exit()
@@ -317,7 +315,7 @@ class Chip8:
 
     # 0x9xy0
     def skip_if_reg_not_equal_to_reg(self, v_x, v_y):
-        if self.V[v_x] != self.V[v_y]:
+        if not self.V[v_x] == self.V[v_y]:
             self.pc += 4
         else:
             self.pc += 2
@@ -397,7 +395,6 @@ class Chip8:
     def set_I_to_sprite_location_for_digit(self, digit):
         self.I = (digit*5)-5
         self.pc += 2
-        print(hex(self.I))
 
     def write_bcd_to_I_from_reg(self, reg):
         self.memory[self.I] = int(self.V[reg] / 100);
